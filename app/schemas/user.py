@@ -5,6 +5,7 @@ This module defines Pydantic schemas for user-related operations including
 profile completion, user creation, and user data retrieval.
 """
 
+from uuid import UUID
 from pydantic import BaseModel, EmailStr
 from typing import List, Literal
 
@@ -75,10 +76,11 @@ class UserRead(BaseModel):
         avatar_url (str, optional): Profile picture URL
         skills (list[str]): List of technical skills
     """
-    id: str
+    id: UUID
     email: EmailStr
     full_name: str | None
     role: str | None
     github: str | None
     avatar_url: str | None
     skills: List[str]
+    profile_complete: bool

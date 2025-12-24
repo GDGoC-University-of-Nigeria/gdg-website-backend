@@ -5,37 +5,38 @@ This module configures the SQLAlchemy database engine and session factory,
 providing database connections for the FastAPI application.
 """
 
-from sqlalchemy import create_engine
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker, declarative_base
 from app.core.config import settings
 
 # Create database engine using the DATABASE_URL from configuration
 # echo=True enables SQL query logging for debugging
-engine = create_engine(settings.DATABASE_URL, echo=True, future=True)
+# Ensure usage of async driver
+db_url = settings.DATABASE_URL
+if "postgresql://" in db_url and "asyncpg" not in db_url:
+     db_url = db_url.replace("postgresql://", "postgresql+asyncpg://")
 
-# SessionLocal is a factory for creating database sessions
-# autocommit=False: Transactions must be explicitly committed
-# autoflush=False: Changes are not automatically flushed to the database
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+engine = create_async_engine(db_url, echo=True, future=True)
+
+# AsyncSessionLocal is a factory for creating database sessions
+AsyncSessionLocal = sessionmaker(
+    engine, 
+    class_=AsyncSession, 
+    expire_on_commit=False,
+    autocommit=False, 
+    autoflush=False
+)
 
 # Base class for declarative models
 Base = declarative_base()
 
 
-def get_db():
+async def get_db():
     """
     Dependency function that provides a database session to route handlers.
     
     Yields:
-        Session: A SQLAlchemy database session
-        
-    Usage:
-        @app.get("/users")
-        def get_users(db: Session = Depends(get_db)):
-            return db.query(User).all()
+        AsyncSession: A SQLAlchemy database session
     """
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+    async with AsyncSessionLocal() as session:
+        yield session

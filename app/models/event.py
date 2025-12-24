@@ -56,7 +56,7 @@ class Event(Base):
     
     # Location and creator
     location = Column(String, nullable=True)  # Venue or virtual meeting link
-    creator_id = Column(Integer, ForeignKey("users.id"))  # Event organizer
+    creator_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))  # Event organizer
     
     # Metadata
     created_at = Column(DateTime, server_default=func.now())  # Creation timestamp

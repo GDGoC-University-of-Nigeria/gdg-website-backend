@@ -6,39 +6,22 @@ including database session management and user authentication checks.
 """
 
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 from fastapi import Depends, HTTPException, status
 from app.db.session import get_db
 from app.models.user import User
 
 
-async def get_current_active_user(
-    db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(lambda: None)  # Placeholder until auth is implemented
-):
-    """
-    Dependency to get the current authenticated and active user.
-    
-    Args:
-        db: Database session
-        current_user: Current authenticated user (from auth middleware)
-        
-    Returns:
-        User: The current active user
-        
-    Raises:
-        HTTPException: If the user is inactive
-        
-    Note:
-        This function requires authentication middleware to be implemented.
-        The get_current_user dependency should be created in the auth module.
-    """
-    if current_user and not current_user.is_active:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Inactive user",
-        )
-    return current_user
+from fastapi.security import OAuth2PasswordBearer
+from jose import jwt, JWTError
+from pydantic import ValidationError
+from app.core import security
+from app.core.config import settings
+from app.crud import user as crud_user
 
+reusable_oauth2 = OAuth2PasswordBearer(
+    tokenUrl=f"/auth/login" # Not actually used for Google Auth but required by FastAPI spec
+)
 
 async def get_db_session() -> AsyncSession:
     """
@@ -46,15 +29,42 @@ async def get_db_session() -> AsyncSession:
     
     Yields:
         AsyncSession: An async SQLAlchemy database session
-        
-    Usage:
-        @app.get("/users")
-        async def get_users(db: AsyncSession = Depends(get_db_session)):
-            result = await db.execute(select(User))
-            return result.scalars().all()
     """
-    db = await get_db()
+    async for session in get_db():
+        yield session
+
+async def get_current_user(
+    db: AsyncSession = Depends(get_db_session),
+    token: str = Depends(reusable_oauth2)
+) -> User:
     try:
-        yield db
-    finally:
-        await db.close()
+        payload = jwt.decode(
+            token, settings.SECRET_KEY, algorithms=[security.ALGORITHM]
+        )
+        token_data = payload.get("sub")
+        if token_data is None:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Could not validate credentials",
+            )
+    except (JWTError, ValidationError):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Could not validate credentials",
+        )
+    
+    # Check by ID (since sub is user.id in auth.py)
+    result = await db.execute(select(User).filter(User.id == token_data))
+    user = result.scalars().first()
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
+
+async def get_current_active_user(
+    current_user: User = Depends(get_current_user),
+) -> User:
+    if not current_user.is_active:
+        raise HTTPException(status_code=400, detail="Inactive user")
+    return current_user

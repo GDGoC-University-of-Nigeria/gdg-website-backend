@@ -6,6 +6,8 @@ on the GDGoC UNN platform. Users authenticate via Google OAuth and can complete
 their profiles with additional information.
 """
 
+
+import uuid
 from sqlalchemy import Column, String, Boolean, DateTime
 from sqlalchemy.dialects.postgresql import UUID, ARRAY
 from sqlalchemy.sql import func
@@ -44,7 +46,7 @@ class User(Base):
     __tablename__ = "users"
 
     # Authentication fields
-    id = Column(UUID, primary_key=True)  # Unique user identifier
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)  # Unique user identifier
     email = Column(String, unique=True, nullable=False)  # Email from Google OAuth
     provider = Column(String, nullable=False)  # OAuth provider (e.g., "google")
     provider_user_id = Column(String, nullable=False)  # Google user ID (google sub)

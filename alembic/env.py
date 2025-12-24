@@ -11,9 +11,22 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from app.db.base import Base
 from app.models import user, event, project  # Import your models here
 
+
+from app.core.config import settings
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
+
+# Set the database URL from settings
+db_url = settings.DATABASE_URL
+# Alembic uses sync driver, so allow fallback or conversion if needed
+if "+asyncpg" in db_url:
+    db_url = db_url.replace("+asyncpg", "") # default to psycopg2
+if "postgresql://" not in db_url and "postgres://" in db_url: # handle potential redis/other or different schemes if needed, but mostly just protocol swap
+    pass 
+
+config.set_main_option("sqlalchemy.url", db_url)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
