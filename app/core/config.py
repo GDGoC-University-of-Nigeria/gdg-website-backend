@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     # Add more global settings here
     DATABASE_URL: str = "postgresql://postgres:maryjesu99@localhost:5432/gdg_backend"
 
-
+    class Config:
+        env_file = ".env"
 # singleton to import everywhere
 settings = Settings()
