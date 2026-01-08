@@ -8,6 +8,7 @@ psycopg[binary]>=3.2
 alembic>=1.13
 
 pydantic-settings>=2.5
+pydantic[email]
 python-dotenv>=1.0
 httpx>=0.27
 
