@@ -1,16 +1,3 @@
-# from pydantic_settings import BaseSettings
-# from pydantic import ConfigDict
-
-# class Settings(BaseSettings):
-#     DATABASE_URL: str
-#     SECRET_KEY: str
-#     ALGORITHM: str = "HS256"
-#     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
-
-#     model_config = ConfigDict(env_file=".env", extra='ignore')
-
-# settings = Settings()
-
 # core/settings.py
 from pydantic_settings import BaseSettings
 
@@ -20,10 +7,17 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 30
-    # Add more global settings here
-    DATABASE_URL: str = "postgresql://postgres:maryjesu99@localhost:5432/gdg_backend"
+    # default uses asyncpg driver; override in .env in production
+    EMAIL_HOST:str = "smtp.example.com"
+    EMAIL_PORT: int = 587
+    EMAIL_USER:str = "your_email@example.com"
+    EMAIL_PASSWORD:str = "your_email_password"
+    EMAIL_FROM:str = "your_email@example.com"
+    CORS_ORIGINS:str = "http://localhost:3000"
+    DEBUG: bool = False
+    DATABASE_URL: str = "postgresql+asyncpg://postgres:maryjesu99@localhost:5432/gdg_db"
 
-    class Config:
-        env_file = ".env"
-# singleton to import everywhere
+    model_config = {"env_file": ".env"}
+
+
 settings = Settings()

@@ -1,6 +1,12 @@
-from sqlalchemy.orm import Session
+from typing import Optional
+
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.models.user import User
 
 
-def get_user_by_email(db: Session, email: str):
-    return db.query(User).filter(User.email == email).first()
+async def get_user_by_email(db: AsyncSession, email: str) -> Optional[User]:
+    stmt = select(User).where(User.email == email)
+    result = await db.execute(stmt)
+    return result.scalars().first()
