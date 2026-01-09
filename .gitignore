@@ -55,4 +55,5 @@ Thumbs.db
 
 # Compiled extensions
 *.so
-*.dylib
+*.dylib__pycache__/
+*.pyc
