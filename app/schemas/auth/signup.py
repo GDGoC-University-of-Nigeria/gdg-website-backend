@@ -2,6 +2,8 @@ from pydantic import BaseModel, EmailStr, Field, field_validator, model_validato
 from uuid import UUID
 import re
 
+from app.core.validators.password import validate_strong_password
+
 
 PHONE_REGEX = re.compile(r"^\+234[7-9][0-1]\d{8}$")
 
@@ -18,10 +20,15 @@ def normalize_ng_phone(phone: str) -> str:
 
 class SignUpRequest(BaseModel):
     email: EmailStr
-    password: str = Field(min_length=8)
+    password: str
     confirm_password: str
     full_name: str
     phone: str
+
+    @field_validator("password")
+    @classmethod
+    def password_strength(cls, value: str) -> str:
+        return validate_strong_password(value)
 
     @field_validator("phone")
     @classmethod
@@ -34,12 +41,13 @@ class SignUpRequest(BaseModel):
             )
 
         return phone
-    
+
     @model_validator(mode="after")
     def passwords_match(self):
         if self.password != self.confirm_password:
             raise ValueError("Passwords do not match")
         return self
+
 
 class UserResponse(BaseModel):
     id: UUID

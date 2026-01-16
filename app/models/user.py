@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, Boolean, DateTime
 from sqlalchemy.dialects.postgresql import UUID, ARRAY
-from sqlalchemy.sql import func
+from sqlalchemy.sql import func, text
 from sqlalchemy.orm import relationship
 from app.db.base import Base
 import uuid
@@ -15,6 +15,7 @@ class User(Base):
     email = Column(String, unique=True, nullable=False)
     phone = Column(String(15), unique=True, nullable=True)
     hashed_password = Column(String, nullable=True)
+    is_admin = Column(Boolean, default=False, server_default=text('false'), nullable=False)
     provider = Column(String, nullable=False)  # OAuth provider (e.g., "google")
     provider_user_id = Column(String, nullable=False)     
     created_at = Column(DateTime, default=func.now())  # Registration timestamp

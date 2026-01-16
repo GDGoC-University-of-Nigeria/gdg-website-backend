@@ -57,3 +57,7 @@ Thumbs.db
 *.so
 *.dylib__pycache__/
 *.pyc
+
+
+create_admin.py
+delete_admin.py 

@@ -4,12 +4,12 @@ from uuid import UUID
 
 
 
-class UserCreate(BaseModel):
-    id: UUID
-    full_name: str | None
-    email: EmailStr
-    provider: Literal["google"]
-    provider_user_id: str
+# class UserCreate(BaseModel):
+#     id: UUID
+#     full_name: str | None
+#     email: EmailStr
+#     provider: Literal["google"]
+#     provider_user_id: str
 
    
 
