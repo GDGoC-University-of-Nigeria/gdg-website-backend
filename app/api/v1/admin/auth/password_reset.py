@@ -5,7 +5,7 @@ from app.schemas.admin.auth.password_reset import AdminResetPasswordRequest
 from app.db.session import get_db
 from app.services.admin.auth.password_reset import reset_user_password
 
-router = APIRouter(prefix="/api/v1/admin/password-reset", tags=["Admin Auth"])
+router = APIRouter(prefix="/api/v1/admin", tags=["Admin Auth"])
 
 @router.post("/reset-password")
 async def admin_reset_password(

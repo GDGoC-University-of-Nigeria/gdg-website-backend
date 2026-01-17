@@ -3,6 +3,7 @@ from sqlalchemy.dialects.postgresql import UUID, ARRAY
 from sqlalchemy.sql import func, text
 from sqlalchemy.orm import relationship
 from app.db.base import Base
+from app.models.event import Event
 import uuid
 
 
@@ -21,7 +22,7 @@ class User(Base):
     created_at = Column(DateTime, default=func.now())  # Registration timestamp
 
     # Relationships (commented out until implemented)
-    # events = relationship("Event", back_populates="creator")
-    # projects = relationship("Project", back_populates="creator")
+    
+    # projects = relationship("Project", back_populates="contributor")
     # blogposts = relationship("BlogPost", back_populates="author")
     # applications = relationship("Applicant", back_populates="user")
