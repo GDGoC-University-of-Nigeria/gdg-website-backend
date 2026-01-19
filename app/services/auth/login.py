@@ -2,7 +2,7 @@ from typing import cast
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from repositories.users import get_user_by_email
+from app.repositories.users.get_user_by_email import get_user_by_email
 from app.core.security import verify_password
 
 
