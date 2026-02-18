@@ -1,6 +1,4 @@
-"""
-Repository function for removing a contributor from a project.
-"""
+
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, delete
@@ -14,17 +12,7 @@ async def remove_contributor(
     project_id: UUID,
     user_id: UUID,
 ) -> None:
-    """
-    Remove a contributor from a project.
     
-    Args:
-        db: Database session
-        project_id: UUID of the project
-        user_id: UUID of the user to remove
-    
-    Raises:
-        ValueError: If contributor not found
-    """
     stmt = delete(ProjectContributor).where(
         ProjectContributor.project_id == project_id,
         ProjectContributor.user_id == user_id,

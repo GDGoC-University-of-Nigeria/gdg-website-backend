@@ -1,6 +1,4 @@
-"""
-Delete project endpoint.
-"""
+
 
 from fastapi import Depends, Path, status, Response
 from sqlalchemy.ext.asyncio import AsyncSession

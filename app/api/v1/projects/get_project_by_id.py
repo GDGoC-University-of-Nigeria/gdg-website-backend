@@ -1,6 +1,4 @@
-"""
-Get project by ID endpoint.
-"""
+
 
 from fastapi import Depends, HTTPException, Path, status
 from sqlalchemy.ext.asyncio import AsyncSession

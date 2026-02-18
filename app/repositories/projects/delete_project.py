@@ -1,6 +1,3 @@
-"""
-Repository function for deleting a project.
-"""
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from uuid import UUID
@@ -12,16 +9,7 @@ async def delete_project(
     db: AsyncSession,
     project_id: UUID,
 ) -> None:
-    """
-    Delete a project from the database.
-    
-    Args:
-        db: Database session
-        project_id: UUID of the project to delete
-    
-    Raises:
-        ValueError: If project not found
-    """
+ 
     project = await get_project_by_id(db, project_id)
     
     if not project:

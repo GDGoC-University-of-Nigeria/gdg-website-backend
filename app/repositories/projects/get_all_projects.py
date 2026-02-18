@@ -1,6 +1,4 @@
-"""
-Repository function for fetching all projects.
-"""
+
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
@@ -16,18 +14,7 @@ async def get_all_projects(
     limit: int = 100,
     project_type: ProjectType | None = None,
 ) -> list[Project]:
-    """
-    Fetch all projects with pagination and optional filtering.
-    
-    Args:
-        db: Database session
-        skip: Number of records to skip
-        limit: Maximum number of records to return
-        project_type: Optional filter by project type
-    
-    Returns:
-        List of projects with eager-loaded relationships
-    """
+
     query = (
         select(Project)
         .options(

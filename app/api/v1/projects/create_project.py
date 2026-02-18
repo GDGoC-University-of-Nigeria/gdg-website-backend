@@ -1,6 +1,4 @@
-"""
-Create project endpoint.
-"""
+
 
 from fastapi import Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession

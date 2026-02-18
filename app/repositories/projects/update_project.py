@@ -1,6 +1,4 @@
-"""
-Repository function for updating a project.
-"""
+
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -15,17 +13,7 @@ async def update_project(
     project_id: UUID,
     payload: ProjectUpdate,
 ) -> Project:
-    """
-    Update an existing project.
-    
-    Args:
-        db: Database session
-        project_id: UUID of the project to update
-        payload: Update data (only provided fields will be updated)
-    
-    Returns:
-        Updated project instance
-    """
+   
     from app.repositories.projects.get_project_by_id import get_project_by_id
     
     project = await get_project_by_id(db, project_id)

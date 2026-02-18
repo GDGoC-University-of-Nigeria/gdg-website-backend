@@ -1,6 +1,3 @@
-"""
-Get all projects endpoint.
-"""
 
 from fastapi import Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession

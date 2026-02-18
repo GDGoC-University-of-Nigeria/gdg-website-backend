@@ -1,6 +1,4 @@
-"""
-Update project endpoint.
-"""
+
 
 from fastapi import Depends, Path, status
 from sqlalchemy.ext.asyncio import AsyncSession

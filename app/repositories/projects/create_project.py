@@ -1,6 +1,4 @@
-"""
-Repository function for creating a new project.
-"""
+
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from uuid import UUID
@@ -14,17 +12,7 @@ async def create_project(
     payload: ProjectCreate,
     creator_id: UUID,
 ) -> Project:
-    """
-    Create a new project in the database.
-    
-    Args:
-        db: Database session
-        payload: Project creation data
-        creator_id: UUID of the user creating the project
-    
-    Returns:
-        Created project instance
-    """
+ 
     project = Project(**payload.model_dump(), creator_id=creator_id)
     db.add(project)
     await db.commit()
