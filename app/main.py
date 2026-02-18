@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 # from app.api import auth, users, events, projects
 from app.core.config import settings
+import app.db.base_class  # noqa: F401 — registers all models with SQLAlchemy mapper
 from app.api.v1.auth.signup import router as auth_router
 from app.api.v1.auth.login import router as login_router
 from app.api.v1.auth.refresh import router as refresh_router
@@ -11,6 +12,8 @@ from app.api.v1.admin.auth.password_reset import router as admin_password_reset_
 from app.api.v1.events.router import router as events_router
 from app.api.v1.admin.users.list_users import router as list_users_router
 from app.api.v1.users.me import router as me_router
+from app.api.v1.projects.router import router as projects_router
+
 
 
 app = FastAPI(title="Google Developer Group on Campus, UNN Community API")
@@ -37,6 +40,8 @@ app.include_router(admin_password_reset_router, tags=["admin auth"])
 app.include_router(events_router, tags=["events"])
 app.include_router(list_users_router, tags=["admin users list"])
 app.include_router(me_router, tags=["me"])
+app.include_router(projects_router, prefix="/api/v1/projects", tags=["projects"])
+
 
 
 @app.get("/")

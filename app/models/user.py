@@ -6,7 +6,6 @@ from app.db.base import Base
 from app.models.event import Event
 import uuid
 
-
 class User(Base):
  
     __tablename__ = "users"
@@ -21,8 +20,9 @@ class User(Base):
     provider_user_id = Column(String, nullable=False)     
     created_at = Column(DateTime, default=func.now())  # Registration timestamp
 
-    # Relationships (commented out until implemented)
-    
-    # projects = relationship("Project", back_populates="contributor")
+    # Relationships
+    created_projects = relationship("Project", back_populates="creator", foreign_keys="Project.creator_id")
+    contributed_projects = relationship("ProjectContributor", back_populates="user", cascade="all, delete-orphan")
     # blogposts = relationship("BlogPost", back_populates="author")
-    # applications = relationship("Applicant", back_populates="user")
+    applications = relationship("Applicant", back_populates="user", cascade="all, delete-orphan")
+
