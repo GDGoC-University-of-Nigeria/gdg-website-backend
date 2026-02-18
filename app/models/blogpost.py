@@ -1,65 +1,64 @@
 """
 BlogPost model for the GDGoC UNN API.
 
-This module defines the BlogPost model for managing blog posts written by
-community members, covering technical topics, tutorials, and experiences.
+Supports a moderated publishing workflow:
+  - Community members submit posts (status = pending)
+  - Admins approve or reject submissions
+  - Only approved posts are publicly visible
 """
 
-from sqlalchemy import Column, String, Boolean, ForeignKey, DateTime, Text
-from sqlalchemy.dialects.postgresql import UUID
-from app.db.base import Base
-from sqlalchemy.sql import func
+import enum
 import uuid
+
+from sqlalchemy import Column, DateTime, Enum, ForeignKey, Index, String, Text
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
+
+from app.db.base import Base
+
+
+class BlogPostStatus(str, enum.Enum):
+    pending = "pending"
+    approved = "approved"
+    rejected = "rejected"
 
 
 class BlogPost(Base):
-    """
-    BlogPost model representing a blog article written by a community member.
-    
-    Community members can write and publish blog posts about technical topics,
-    tutorials, project experiences, or other relevant content. Posts require
-    verification by admins before being publicly visible.
-    
-    Attributes:
-        id (UUID): Unique identifier for the blog post
-        author_id (UUID): ID of the user who wrote the post
-        title (str): Blog post title/headline
-        image_url (str, optional): URL to featured/cover image
-        content (str): Full blog post content
-        content_format (str): Format of the content (default: "markdown")
-        is_verified (bool): Whether the post has been approved by admins
-        niche (str, optional): Topic category (e.g., "Web Development", "AI/ML", "DevOps")
-        posted_at (datetime): Timestamp when the post was created
-    
-    Relationships:
-        author: User who wrote this blog post (to be implemented)
-    
-    Notes:
-        - Posts are created with is_verified=False and require admin approval
-        - Content is stored in markdown format by default for rich formatting
-        - The niche field helps categorize posts for easier discovery
-    """
-    
+
     __tablename__ = "blogposts"
 
-    # Primary identifier
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    
-    # Author relationship
+
+    # Author
     author_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
 
-    # Post content
-    title = Column(String, nullable=False)  # Post title
-    image_url = Column(String, nullable=True)  # Featured image
-    content = Column(Text, nullable=False)  # Full post content
-    content_format = Column(String, default="markdown")  # Content format (markdown, html, etc.)
+    # Content
+    title = Column(String, nullable=False)
+    image_url = Column(String, nullable=True)
+    content = Column(Text, nullable=False)
+    content_format = Column(String, default="markdown")
+    niche = Column(String, nullable=True)
 
-    # Moderation and categorization
-    is_verified = Column(Boolean, default=False)  # Admin approval status
-    niche = Column(String, nullable=True)  # Topic category/tag
-    
-    # Metadata
-    posted_at = Column(DateTime, server_default=func.now())  # Publication timestamp
+    # Moderation
+    status = Column(
+        Enum(BlogPostStatus, name="blogpoststatus"),
+        nullable=False,
+        default=BlogPostStatus.pending,
+        server_default="pending",
+    )
+    approved_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    approved_at = Column(DateTime, nullable=True)
+    rejection_reason = Column(String, nullable=True)
 
-    # Relationships (to be implemented)
-    # author = relationship("User", back_populates="blogposts")
+    # Timestamps
+    posted_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+
+    # Relationships
+    author = relationship("User", back_populates="blogposts", foreign_keys=[author_id])
+    approver = relationship("User", back_populates="approved_blogposts", foreign_keys=[approved_by])
+
+    __table_args__ = (
+        Index("ix_blogposts_status", "status"),
+    )

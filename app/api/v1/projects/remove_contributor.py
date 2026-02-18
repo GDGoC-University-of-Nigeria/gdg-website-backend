@@ -1,6 +1,4 @@
-"""
-Remove contributor from project endpoint.
-"""
+
 
 from fastapi import Depends, HTTPException, Path, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession

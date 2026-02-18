@@ -1,6 +1,4 @@
-"""
-Get project contributors endpoint.
-"""
+
 
 from fastapi import Depends, Path
 from sqlalchemy.ext.asyncio import AsyncSession

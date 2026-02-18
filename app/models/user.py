@@ -23,6 +23,7 @@ class User(Base):
     # Relationships
     created_projects = relationship("Project", back_populates="creator", foreign_keys="Project.creator_id")
     contributed_projects = relationship("ProjectContributor", back_populates="user", cascade="all, delete-orphan")
-    # blogposts = relationship("BlogPost", back_populates="author")
+    blogposts = relationship("BlogPost", back_populates="author", foreign_keys="BlogPost.author_id")
+    approved_blogposts = relationship("BlogPost", back_populates="approver", foreign_keys="BlogPost.approved_by")
     applications = relationship("Applicant", back_populates="user", cascade="all, delete-orphan")
 

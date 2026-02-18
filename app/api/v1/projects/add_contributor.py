@@ -1,6 +1,4 @@
-"""
-Add contributor to project endpoint.
-"""
+
 
 from fastapi import Depends, HTTPException, Path, status
 from sqlalchemy.ext.asyncio import AsyncSession
