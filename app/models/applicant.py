@@ -6,6 +6,7 @@ applications and contributor approvals.
 """
 
 from sqlalchemy import Column, Boolean, ForeignKey, String, DateTime
+from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 from app.db.base import Base
 from sqlalchemy.sql import func
@@ -55,6 +56,7 @@ class Applicant(Base):
     # Metadata
     applied_at = Column(DateTime, server_default=func.now())  # Application timestamp
 
-    # Relationships (to be implemented)
-    # user = relationship("User", back_populates="applications")
-    # project = relationship("Project", back_populates="applicants")
+    # Relationships
+    user = relationship("User", back_populates="applications")
+    project = relationship("Project", back_populates="applicants")
+
