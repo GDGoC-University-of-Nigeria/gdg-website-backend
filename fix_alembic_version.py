@@ -11,7 +11,7 @@ import asyncpg
 
 async def fix_alembic_version():
     # Render database URL
-    DATABASE_URL = "postgresql://gdg_db_6mfn_user:QYBqIGPbTEX8PJ63EVvsPnCfjUkt6DOF@dpg-d5frn2khg0os73dulnsg-a.oregon-postgres.render.com/gdg_db_6mfn"
+    DATABASE_URL = "postgresql+asyncpg://neondb_owner:npg_9nbMKV5ZPhFu@ep-sweet-truth-aic0ba6i-pooler.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
     
     # Connect to database (remove +asyncpg from URL for asyncpg)
     conn = await asyncpg.connect(DATABASE_URL)

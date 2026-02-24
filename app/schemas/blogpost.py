@@ -62,8 +62,13 @@ class BlogPostRead(BaseModel):
     posted_at: datetime | None
     updated_at: datetime | None
     approved_at: datetime | None
+    # Engagement counts (populated via scalar subqueries)
+    likes_count: int = 0
+    comments_count: int = 0
+    is_liked_by_current_user: bool = False
 
     model_config = ConfigDict(from_attributes=True)
+
 
 
 class BlogPostAdminRead(BlogPostRead):

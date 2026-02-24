@@ -58,6 +58,8 @@ class BlogPost(Base):
     # Relationships
     author = relationship("User", back_populates="blogposts", foreign_keys=[author_id])
     approver = relationship("User", back_populates="approved_blogposts", foreign_keys=[approved_by])
+    likes = relationship("BlogPostLike", back_populates="blogpost", cascade="all, delete-orphan")
+    comments = relationship("Comment", back_populates="blogpost", cascade="all, delete-orphan")
 
     __table_args__ = (
         Index("ix_blogposts_status", "status"),

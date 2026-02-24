@@ -4,3 +4,5 @@ from app.models.project_contributor import ProjectContributor
 from app.models.applicant import Applicant
 from app.models.event import Event
 from app.models.blogpost import BlogPost
+from app.models.blog_post_like import BlogPostLike
+from app.models.comment import Comment

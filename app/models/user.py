@@ -26,4 +26,6 @@ class User(Base):
     blogposts = relationship("BlogPost", back_populates="author", foreign_keys="BlogPost.author_id")
     approved_blogposts = relationship("BlogPost", back_populates="approver", foreign_keys="BlogPost.approved_by")
     applications = relationship("Applicant", back_populates="user", cascade="all, delete-orphan")
+    likes = relationship("BlogPostLike", back_populates="user", cascade="all, delete-orphan")
+    comments = relationship("Comment", back_populates="user", cascade="all, delete-orphan")
 

@@ -4,6 +4,7 @@ from app.repositories.blogposts.get_blogpost_by_id import get_blogpost_by_id
 from app.repositories.blogposts.get_posts_by_status import get_posts_by_status, get_author_posts
 from app.repositories.blogposts.approve_blogpost import approve_blogpost
 from app.repositories.blogposts.reject_blogpost import reject_blogpost
+from app.repositories.blogposts.toggle_like import toggle_like
 
 __all__ = [
     "create_blogpost",
@@ -13,4 +14,6 @@ __all__ = [
     "get_author_posts",
     "approve_blogpost",
     "reject_blogpost",
+    "toggle_like",
 ]
+
