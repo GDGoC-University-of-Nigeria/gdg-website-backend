@@ -15,6 +15,7 @@ from app.api.v1.users.me import router as me_router
 from app.api.v1.projects.router import router as projects_router
 from app.api.v1.blogposts.router import router as blogposts_router
 from app.api.v1.admin.blogposts.router import router as admin_blogposts_router
+from app.api.v1.comments.router import router as comments_router
 
 
 
@@ -45,6 +46,7 @@ app.include_router(me_router, tags=["me"])
 app.include_router(projects_router, prefix="/api/v1/projects", tags=["projects"])
 app.include_router(blogposts_router, prefix="/api/v1/blogposts", tags=["blogposts"])
 app.include_router(admin_blogposts_router, prefix="/api/v1/admin/blogposts", tags=["admin blogposts"])
+app.include_router(comments_router, prefix="/api/v1/comments", tags=["comments"])
 
 
 

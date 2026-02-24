@@ -13,6 +13,16 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from app.db.base import Base
 from app.db import base_class
 from app.core.config import settings
+import ssl
+
+# ssl context for neon db
+# ssl_context = ssl.create_default_context()
+
+engine = create_async_engine(
+    settings.DATABASE_URL,
+    # connect_args={"ssl": ssl_context},
+    connect_args={"ssl": "require"},
+)
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
