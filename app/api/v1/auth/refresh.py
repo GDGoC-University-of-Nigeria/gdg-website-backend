@@ -28,7 +28,8 @@ def refresh_token(request: Request, response: Response):
         value=new_access_token,
         httponly=True,
         secure=True,
-        samesite="lax",
+        # samesite="lax",
+        samesite="none",
         max_age=60 * settings.ACCESS_TOKEN_EXPIRE_MINUTES,
     )
 
