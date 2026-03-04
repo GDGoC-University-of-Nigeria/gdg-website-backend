@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     EMAIL_FROM:str = "your_email@example.com"
     CORS_ORIGINS:str = "http://localhost:3000"
     DEBUG: bool = False
-    DATABASE_URL: str = "postgresql+asyncpg://neondb_owner:npg_9nbMKV5ZPhFu@ep-sweet-truth-aic0ba6i-pooler.c-4.us-east-1.aws.neon.tech/neondb"
+    DATABASE_URL: str = "ppostgresql+asyncpg://postgres:maryjesu99@localhost:5432/gdg_db"
 
     model_config = {"env_file": ".env", "extra": "allow"}
 
