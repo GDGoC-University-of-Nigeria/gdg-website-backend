@@ -28,7 +28,8 @@ async def login(
         key="access_token",
         value=access_token,
         httponly=True,
-        secure=True,
+        # secure=True,
+        secure=False,
         # samesite="lax",
         samesite="none",
         max_age=60 * settings.ACCESS_TOKEN_EXPIRE_MINUTES,
@@ -38,10 +39,11 @@ async def login(
         key="refresh_token",
         value=refresh_token,
         httponly=True,
-        secure=True,
+        # secure=True,
+        secure=False,
         # samesite="lax",
         samesite="none",
         max_age=60 * 60 * 24 * settings.REFRESH_TOKEN_EXPIRE_DAYS,
-        path="/api/v1/auth/refresh", 
+        path="/auth/refresh", 
     )
     return {"message": "Login successful"}
