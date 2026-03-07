@@ -1,12 +1,24 @@
-from sqlalchemy.ext.asyncio import AsyncSession
+from datetime import date
+
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
-from uuid import UUID
 
 from app.models.event import Event
 
-async def get_all_events(db: AsyncSession) -> list[Event]:
-    result = await db.execute(
-        select(Event).options(selectinload(Event.speakers))
+
+async def get_all_events(
+    db: AsyncSession,
+    from_date: date | None = None,
+    limit: int = 100,
+) -> list[Event]:
+    query = (
+        select(Event)
+        .options(selectinload(Event.speakers))
+        .order_by(Event.date.asc())
+        .limit(limit)
     )
-    return result.scalars().all()
+    if from_date is not None:
+        query = query.where(Event.date >= from_date)
+    result = await db.execute(query)
+    return list(result.scalars().all())

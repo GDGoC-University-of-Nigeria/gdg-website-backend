@@ -12,7 +12,7 @@ async def create_blogpost(
     author_id: UUID,
     auto_approve: bool = False,
 ) -> BlogPost:
-    now = datetime.utcnow()  # naive UTC — matches TIMESTAMP WITHOUT TIME ZONE
+    now = datetime.utcnow()()()  # naive UTC - matches TIMESTAMP WITHOUT TIME ZONE
 
     post = BlogPost(
         author_id=author_id,
@@ -28,4 +28,3 @@ async def create_blogpost(
     await db.commit()
     await db.refresh(post)
     return post
-

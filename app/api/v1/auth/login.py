@@ -46,4 +46,8 @@ async def login(
         max_age=60 * 60 * 24 * settings.REFRESH_TOKEN_EXPIRE_DAYS,
         path="/auth/refresh", 
     )
-    return {"message": "Login successful"}
+    return {
+        "message": "Login successful",
+        "access_token": access_token,
+        "token_type": "bearer",
+    }

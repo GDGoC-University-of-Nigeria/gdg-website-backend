@@ -63,4 +63,8 @@ async def admin_login(
         path="/auth/refresh", 
     )
 
-    return {"message": "Admin login successful"}
+    return {
+        "message": "Admin login successful",
+        "access_token": access_token,
+        "token_type": "bearer",
+    }

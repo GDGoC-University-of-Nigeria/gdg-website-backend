@@ -1,5 +1,6 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 from uuid import UUID
 
 from app.models.comment import Comment
@@ -13,6 +14,7 @@ async def get_comments(
 ) -> list[Comment]:
     result = await db.execute(
         select(Comment)
+        .options(selectinload(Comment.user))
         .where(Comment.blogpost_id == blogpost_id)
         .order_by(Comment.created_at.desc())
         .offset(skip)

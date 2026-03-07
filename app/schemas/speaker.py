@@ -8,7 +8,7 @@ class SpeakerBase(BaseModel):
     
     name: str
     bio: str
-    image_url: str
+    image_url: str | None = None
     topic: Optional[str] = None
     niche: str
 

@@ -36,4 +36,5 @@ class EventUpdate(BaseModel):
     date: Optional[date] = None
     start_time: Optional[time] = None
     end_time: Optional[time] = None
+    image_url: Optional[str] = None
     location: Optional[str] = None

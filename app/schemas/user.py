@@ -15,6 +15,20 @@ class UserResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+class UpdateUserRequest(BaseModel):
+    """Partial update for user profile (PATCH /users/me)."""
+    full_name: str | None = None
+    email: EmailStr | None = None
+    phone: str | None = None
+
+
+class UpdateUserRequest(BaseModel):
+    """Partial update for user profile (PATCH /users/me)."""
+    full_name: str | None = None
+    email: EmailStr | None = None
+    phone: str | None = None
+
+
 
 # class UserRead(BaseModel):
    
