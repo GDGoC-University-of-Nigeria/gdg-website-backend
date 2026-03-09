@@ -4,6 +4,7 @@ from sqlalchemy.sql import func, text
 from sqlalchemy.orm import relationship
 from app.db.base import Base
 from app.models.event import Event
+from app.models.event_registration import EventRegistration
 import uuid
 
 class User(Base):
@@ -28,4 +29,5 @@ class User(Base):
     applications = relationship("Applicant", back_populates="user", cascade="all, delete-orphan")
     likes = relationship("BlogPostLike", back_populates="user", cascade="all, delete-orphan")
     comments = relationship("Comment", back_populates="user", cascade="all, delete-orphan")
+    event_registrations = relationship("EventRegistration", back_populates="user", cascade="all, delete-orphan")
 

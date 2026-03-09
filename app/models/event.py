@@ -33,6 +33,6 @@ class Event(Base):
     created_at = Column(DateTime, server_default=func.now())
 
     # Relationships
-    
     speakers = relationship("Speakers", back_populates="event", cascade="all, delete-orphan")
+    registrations = relationship("EventRegistration", back_populates="event", cascade="all, delete-orphan")
 
