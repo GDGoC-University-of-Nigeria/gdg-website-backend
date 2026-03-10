@@ -20,11 +20,11 @@ from app.api.v1.community import router as community_router
 
 app = FastAPI(title="Google Developer Group on Campus, UNN Community API")
 
-# CORS middleware
+# CORS: allow_origins comes from settings so you can set CORS_ORIGINS on Render (comma-separated).
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], 
-    allow_credentials=False,
+    allow_origins=settings.cors_origins_list,
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
