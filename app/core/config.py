@@ -23,8 +23,7 @@ class Settings(BaseSettings):
     EMAIL_FROM: str = "your_email@example.com"
     # Comma-separated list of allowed frontend origins, e.g. https://myapp.vercel.app,https://myapp.com
     CORS_ORIGINS: str = (
-        "http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173,"
-        "https://gdg-website-llgf.vercel.app,https://gdg-website-llgf-solomons-projects-5010d5f5.vercel.app"
+        "http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173,https://gdg-website-llgf.vercel.app,https://gdg-website-llgf-solomons-projects-5010d5f5.vercel.app"
     )
     DEBUG: bool = False
     DATABASE_URL: str = "ppostgresql+asyncpg://postgres:maryjesu99@localhost:5432/gdg_db"
