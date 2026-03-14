@@ -11,6 +11,7 @@ class UserResponse(BaseModel):
     phone: str | None
     is_admin: bool
     created_at: datetime
+    is_active: bool
 
     model_config = ConfigDict(from_attributes=True)
 

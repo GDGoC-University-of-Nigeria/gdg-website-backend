@@ -25,6 +25,8 @@ class Settings(BaseSettings):
     CORS_ORIGINS: str = (
         "http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173,https://gdg-website-llgf.vercel.app,https://gdg-website-llgf-solomons-projects-5010d5f5.vercel.app"
     )
+    # Set to false in local .env for cookies over HTTP
+    COOKIE_SECURE: bool = True
     DEBUG: bool = False
     DATABASE_URL: str = "ppostgresql+asyncpg://postgres:maryjesu99@localhost:5432/gdg_db"
 

@@ -11,6 +11,7 @@ import app.db.base_class  # noqa: F401
 from sqlalchemy import select
 from app.db.session import AsyncSessionLocal
 from app.models.user import User
+from app.models.team_member import TeamMember
 from app.core.security import hash_password
 from app.repositories.events import create_event
 from app.repositories.projects import create_project
@@ -136,12 +137,35 @@ async def seed_blog_posts(db, admin_id):
     print(f"Seeded {len(posts_data)} blog posts")
 
 
+async def seed_team_members(db):
+    """Seed team members (builders) for landing page. No Stephanie; Nzeribe = Operations Lead."""
+    result = await db.execute(select(TeamMember).limit(1))
+    if result.scalars().first() is not None:
+        print("Team members already exist, skipping.")
+        return
+    members_data = [
+        {"name": "Ndubuisi Mark", "role": "Lead", "display_order": 1},
+        {"name": "Nzeribe Mmesoma", "role": "Operations Lead", "display_order": 2},
+        {"name": "Perpetual Asogwa", "role": "Technical Lead", "display_order": 3},
+        {"name": "Solomon Adzape", "role": "Technical Lead", "display_order": 4},
+        {"name": "Chidinma Ajima", "role": "Community Manager", "display_order": 5},
+        {"name": "Igwe Favour", "role": "Designer", "display_order": 6},
+        {"name": "Somto Ufodiama", "role": "Designer", "display_order": 7},
+        {"name": "Ihuoma Obasi", "role": "Social Media Manager", "display_order": 7},
+    ]
+    for m in members_data:
+        db.add(TeamMember(name=m["name"], role=m["role"], image_url=None, display_order=m["display_order"]))
+    await db.commit()
+    print(f"Seeded {len(members_data)} team members")
+
+
 async def main():
     async with AsyncSessionLocal() as db:
         admin = await get_or_create_admin(db)
         await seed_events(db, admin.id)
         await seed_projects(db, admin.id)
         await seed_blog_posts(db, admin.id)
+        await seed_team_members(db)
     print("Seed complete.")
 
 

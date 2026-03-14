@@ -17,6 +17,8 @@ from app.api.v1.blogposts.router import router as blogposts_router
 from app.api.v1.admin.blogposts.router import router as admin_blogposts_router
 from app.api.v1.comments.router import router as comments_router
 from app.api.v1.community import router as community_router
+from app.api.v1.team import router as team_router
+from app.api.v1.public_forms import router as public_forms_router
 
 app = FastAPI(title="Google Developer Group on Campus, UNN Community API")
 
@@ -44,6 +46,8 @@ app.include_router(blogposts_router, prefix="/api/v1/blogposts", tags=["blogpost
 app.include_router(admin_blogposts_router, prefix="/api/v1/admin/blogposts", tags=["admin blogposts"])
 app.include_router(comments_router, prefix="/api/v1/comments", tags=["comments"])
 app.include_router(community_router, prefix="/api/v1/community", tags=["community"])
+app.include_router(team_router, prefix="/api/v1", tags=["team"])
+app.include_router(public_forms_router)
 
 @app.get("/")
 async def root():

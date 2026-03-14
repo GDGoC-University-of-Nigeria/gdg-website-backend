@@ -17,6 +17,6 @@ from .router import router
 async def list_events(
     db: AsyncSession = Depends(get_db),
     from_date: date | None = Query(None, description="Filter events on or after this date"),
-    limit: int = Query(100, ge=1, le=100, description="Maximum events to return"),
+    limit: int = Query(100, ge=1, le=500, description="Maximum events to return"),
 ):
     return await get_all_events(db=db, from_date=from_date, limit=limit)

@@ -20,6 +20,7 @@ class User(Base):
     provider = Column(String, nullable=False)  # OAuth provider (e.g., "google")
     provider_user_id = Column(String, nullable=False)     
     created_at = Column(DateTime, default=func.now())  # Registration timestamp
+    is_active = Column(Boolean, default=True, server_default=text("true"), nullable=False)
 
     # Relationships
     created_projects = relationship("Project", back_populates="creator", foreign_keys="Project.creator_id")
