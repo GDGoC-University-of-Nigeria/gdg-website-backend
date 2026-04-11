@@ -7,6 +7,7 @@ from uuid import UUID
 
 from app.models.project import Project
 from app.models.project_contributor import ProjectContributor
+from app.models.user import User
 
 
 async def get_project_by_id(
@@ -18,9 +19,10 @@ async def get_project_by_id(
         select(Project)
         .where(Project.id == project_id)
         .options(
-            selectinload(Project.creator),
-            selectinload(Project.contributors).selectinload(ProjectContributor.user)
+            selectinload(Project.creator).selectinload(User.profile),
+            selectinload(Project.contributors).selectinload(ProjectContributor.user).selectinload(User.profile)
         )
+
     )
     
     result = await db.execute(query)

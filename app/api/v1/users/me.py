@@ -20,15 +20,17 @@ async def update_me(
     user=Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
-    """Update current user's profile (full_name, email, phone)."""
+    """Update current user's profile (full_name, phone, bio)."""
     try:
         updated = await update_user(
             db=db,
             user_id=user.id,
             full_name=payload.full_name,
-            email=payload.email,
             phone=payload.phone,
+            avatar_url=payload.avatar_url,
+            bio=payload.bio,
         )
         return updated
+
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))

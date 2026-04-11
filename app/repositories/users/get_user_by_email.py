@@ -7,6 +7,8 @@ from app.models.user import User
 
 
 async def get_user_by_email(db: AsyncSession, email: str) -> Optional[User]:
-    stmt = select(User).where(User.email == email, User.is_active.is_(True))
+    from sqlalchemy.orm import selectinload
+    stmt = select(User).options(selectinload(User.profile)).where(User.email == email, User.is_active.is_(True))
     result = await db.execute(stmt)
+
     return result.scalars().first()

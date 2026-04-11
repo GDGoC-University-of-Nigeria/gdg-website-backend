@@ -27,10 +27,10 @@ def refresh_token(request: Request, response: Response):
         key="access_token",
         value=new_access_token,
         httponly=True,
-        secure=True,
-        # samesite="lax",
-        samesite="none",
+        secure=settings.COOKIE_SECURE,
+        samesite=settings.cookie_samesite,
         max_age=60 * settings.ACCESS_TOKEN_EXPIRE_MINUTES,
+        path="/",
     )
 
     return {"message": "Access token refreshed"}

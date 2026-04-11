@@ -11,6 +11,8 @@ async def get_user_by_id(
     db: AsyncSession,
     user_id: UUID,
 ) -> Optional[User]:
-    stmt = select(User).where(User.id == user_id)
+    from sqlalchemy.orm import selectinload
+    stmt = select(User).options(selectinload(User.profile)).where(User.id == user_id)
     result = await db.execute(stmt)
     return result.scalars().first()
+

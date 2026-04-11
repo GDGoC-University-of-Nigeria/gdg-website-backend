@@ -32,7 +32,7 @@ async def like_blogpost(
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Blog post not found")
 
-    if post["status"] != BlogPostStatus.approved:
+    if post.status != BlogPostStatus.approved:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Likes are only allowed on approved posts",

@@ -6,6 +6,7 @@ from sqlalchemy.orm import selectinload
 from uuid import UUID
 
 from app.models.project_contributor import ProjectContributor
+from app.models.user import User
 
 
 async def get_project_contributors(
@@ -16,7 +17,8 @@ async def get_project_contributors(
     query = (
         select(ProjectContributor)
         .where(ProjectContributor.project_id == project_id)
-        .options(selectinload(ProjectContributor.user))
+        .options(selectinload(ProjectContributor.user).selectinload(User.profile))
+
     )
     
     result = await db.execute(query)

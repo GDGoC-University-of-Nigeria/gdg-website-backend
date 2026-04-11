@@ -26,9 +26,11 @@ async def get_posts_by_status_with_author(
     limit: int = 50,
 ) -> list[BlogPost]:
     """List blog posts with author relationship loaded (for admin list)."""
+    from app.models.user import User
     query = (
         select(BlogPost)
-        .options(selectinload(BlogPost.author))
+        .options(selectinload(BlogPost.author).selectinload(User.profile))
+
         .order_by(BlogPost.posted_at.desc())
         .offset(skip)
         .limit(limit)

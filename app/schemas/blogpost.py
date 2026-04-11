@@ -70,13 +70,8 @@ class BlogPostRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-class AuthorInfo(BaseModel):
-    """Minimal author info for admin display."""
-    id: UUID
-    full_name: str | None
-    email: str
+from app.schemas.user import UserBasic as AuthorInfo
 
-    model_config = ConfigDict(from_attributes=True)
 
 
 class BlogPostAdminRead(BlogPostRead):

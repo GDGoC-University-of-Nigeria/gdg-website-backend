@@ -6,6 +6,7 @@ from sqlalchemy.orm import selectinload
 
 from app.models.project import Project, ProjectType, ProjectStatus
 from app.models.project_contributor import ProjectContributor
+from app.models.user import User
 
 
 async def get_all_projects(
@@ -19,8 +20,8 @@ async def get_all_projects(
     query = (
         select(Project)
         .options(
-            selectinload(Project.creator),
-            selectinload(Project.contributors).selectinload(ProjectContributor.user)
+            selectinload(Project.creator).selectinload(User.profile),
+            selectinload(Project.contributors).selectinload(ProjectContributor.user).selectinload(User.profile)
         )
         .offset(skip)
         .limit(limit)
