@@ -187,6 +187,9 @@ from sqlalchemy import select
 from app.db.session import AsyncSessionLocal
 from app.models.user import User
 from app.models.team_member import TeamMember
+from app.models.event import Event
+from app.models.project import Project
+from app.models.blogpost import BlogPost
 from app.repositories.events import create_event
 from app.repositories.projects import create_project
 from app.repositories.blogposts import create_blogpost
@@ -206,7 +209,7 @@ async def get_admin(db) -> User:
 async def seed_events(db, admin_id):
     today = date.today()
 
-    existing = await db.execute(select(EventCreate.title))
+    existing = await db.execute(select(Event.title))
     existing_titles = set(existing.scalars().all())
 
     events_data = [
@@ -251,7 +254,7 @@ async def seed_events(db, admin_id):
 async def seed_projects(db, admin_id):
     today = date.today()
 
-    existing = await db.execute(select(ProjectCreate.title))
+    existing = await db.execute(select(Project.title))
     existing_titles = set(existing.scalars().all())
 
     projects_data = [
@@ -287,7 +290,7 @@ async def seed_projects(db, admin_id):
 
 
 async def seed_blog_posts(db, admin_id):
-    existing = await db.execute(select(BlogPostCreate.title))
+    existing = await db.execute(select(BlogPost.title))
     existing_titles = set(existing.scalars().all())
 
     posts_data = [
