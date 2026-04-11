@@ -6,13 +6,8 @@ from uuid import UUID
 from pydantic import BaseModel, ConfigDict, Field
 
 
-class CommentAuthorInfo(BaseModel):
-    """Minimal author info for comment display."""
-    id: UUID
-    full_name: str | None
-    email: str
+from app.schemas.user import UserBasic as CommentAuthorInfo
 
-    model_config = ConfigDict(from_attributes=True)
 
 
 class CommentCreate(BaseModel):

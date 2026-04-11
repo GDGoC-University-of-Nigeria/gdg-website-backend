@@ -9,3 +9,4 @@ from app.models.blogpost import BlogPost
 from app.models.blog_post_like import BlogPostLike
 from app.models.comment import Comment
 from app.models.team_member import TeamMember
+from app.models.user_profile import UserProfile

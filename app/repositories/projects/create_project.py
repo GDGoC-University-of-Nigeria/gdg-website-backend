@@ -16,5 +16,7 @@ async def create_project(
     project = Project(**payload.model_dump(), creator_id=creator_id)
     db.add(project)
     await db.commit()
-    await db.refresh(project, attribute_names=["creator", "contributors"])
-    return project
+    
+    from app.repositories.projects.get_project_by_id import get_project_by_id
+    # Re-fetch with all necessary options for the response
+    return await get_project_by_id(db, project.id)

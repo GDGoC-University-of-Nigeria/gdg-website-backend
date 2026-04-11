@@ -13,12 +13,15 @@ async def get_community_members(
     limit: int = 20,
 ) -> List[User]:
     """Return non-admin users, ordered by created_at desc, with pagination."""
+    from sqlalchemy.orm import selectinload
     stmt = (
         select(User)
+        .options(selectinload(User.profile))
         .where(User.is_admin == False)
         .order_by(User.created_at.desc())
         .offset(skip)
         .limit(limit)
     )
+
     result = await db.execute(stmt)
     return list(result.scalars().all())

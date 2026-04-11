@@ -12,9 +12,11 @@ async def get_comments(
     skip: int = 0,
     limit: int = 20,
 ) -> list[Comment]:
+    from app.models.user import User
     result = await db.execute(
         select(Comment)
-        .options(selectinload(Comment.user))
+        .options(selectinload(Comment.user).selectinload(User.profile))
+
         .where(Comment.blogpost_id == blogpost_id)
         .order_by(Comment.created_at.desc())
         .offset(skip)

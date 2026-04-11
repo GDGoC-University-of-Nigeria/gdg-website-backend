@@ -8,11 +8,19 @@ def _parse_cors_origins(value: str) -> list[str]:
 
 
 class Settings(BaseSettings):
-    SECRET_KEY: str = "your-secret-key-here"  # override with environment variables in prod
+    ALLOWED_ORIGINS: str = "http://localhost:3000"
+    SECRET_KEY: str = "your-secret-key-here" 
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 30
-    ADMIN_EMAIL: str = "admin@example.com"
+
+    # Google OAuth
+    GOOGLE_CLIENT_ID: str 
+    GOOGLE_CLIENT_SECRET: str 
+    GOOGLE_REDIRECT_URI: str 
+    FRONTEND_URL: str = "http://localhost:3000"
+    SESSION_SECRET_KEY: str = "change-me-in-production"
+    ADMIN_EMAIL: str = "[EMAIL_ADDRESS]"
 
     ADMIN_PASSWORD: str = "Admin123tyu"
     # default uses asyncpg driver; override in .env in production
@@ -21,6 +29,10 @@ class Settings(BaseSettings):
     EMAIL_USER: str = "your_email@example.com"
     EMAIL_PASSWORD: str = "your_email_password"
     EMAIL_FROM: str = "your_email@example.com"
+    # Cloudinary
+    CLOUDINARY_CLOUD_NAME: str = ""
+    CLOUDINARY_API_KEY: str = ""
+    CLOUDINARY_API_SECRET: str = ""
     # Comma-separated list of allowed frontend origins, e.g. https://myapp.vercel.app,https://myapp.com
     CORS_ORIGINS: str = (
         "http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173,https://gdg-website-llgf.vercel.app,https://gdg-website-llgf-solomons-projects-5010d5f5.vercel.app"
@@ -36,5 +48,16 @@ class Settings(BaseSettings):
     def cors_origins_list(self) -> list[str]:
         return _parse_cors_origins(self.CORS_ORIGINS)
 
+    @property
+    def allowed_origins_list(self) -> list[str]:
+        return [origin.strip() for origin in self.ALLOWED_ORIGINS.split(",")]
+
+    @property
+    def cookie_samesite(self) -> str:
+        """
+        SameSite=None requires Secure=True (HTTPS); browsers silently drop the
+        cookie otherwise. Use 'lax' for local HTTP dev and 'none' for production.
+        """
+        return "none" if self.COOKIE_SECURE else "lax"
 
 settings = Settings()

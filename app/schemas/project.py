@@ -35,20 +35,8 @@ class ProjectType(str, Enum):
     community = "community"
 
 
-class UserBasic(BaseModel):
-    """
-    Basic user information for nested responses.
-    
-    Attributes:
-        id (UUID): User unique identifier
-        full_name (str): User's full name
-        email (str): User's email address
-    """
-    id: UUID
-    full_name: str | None = None
-    email: str
+from app.schemas.user import UserBasic
 
-    model_config = ConfigDict(from_attributes=True)
 
 
 class ProjectCreate(BaseModel):

@@ -51,57 +51,57 @@ async def get_current_user(
 ) -> User:
     """
     Get current user from JWT token.
-    Accepts token from either:
-    1. Authorization header (Bearer token)
-    2. Cookie (access_token)
+    Priority:
+      1. Authorization header (Bearer token) — always takes precedence
+      2. access_token cookie — fallback for browser-based sessions
     """
-    
-    # Try to get token from header first
-    token = None
-    if credentials:
-        token = credentials.credentials
-    
-    # If not in header, try cookie
-    if not token:
+    token: Optional[str] = None
+
+    # 1. Authorization header takes priority
+    auth_header = request.headers.get("Authorization")
+    if auth_header and auth_header.startswith("Bearer "):
+        token = auth_header.split(" ", 1)[1]
+    else:
+        # 2. Fall back to cookie
         token = request.cookies.get("access_token")
-    
-    # If still no token, raise error
+
     if not token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Not authenticated",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
+
     try:
-        # Decode JWT token
         payload = jwt.decode(
             token,
             settings.SECRET_KEY,
             algorithms=[settings.ALGORITHM]
         )
         user_id: str = payload.get("sub")
-        
+
         if user_id is None:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid authentication credentials",
             )
-            
+
     except JWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid authentication credentials",
         )
-    
+
     # Get user from database, ensuring they are still active
-    result = await db.execute(select(User).where(User.id == user_id, User.is_active.is_(True)))
+    from sqlalchemy.orm import selectinload
+    stmt = select(User).options(selectinload(User.profile)).where(User.id == user_id, User.is_active.is_(True))
+    result = await db.execute(stmt)
     user = result.scalar_one_or_none()
-    
+
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="User not found",
         )
-    
+
     return user

@@ -27,5 +27,6 @@ async def update_project(
         setattr(project, field, value)
     
     await db.commit()
-    await db.refresh(project, attribute_names=["creator", "contributors"])
-    return project
+    
+    # Re-fetch with all necessary options for the response
+    return await get_project_by_id(db, project_id)
