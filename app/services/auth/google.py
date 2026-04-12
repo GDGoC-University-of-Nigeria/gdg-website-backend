@@ -24,7 +24,7 @@ async def find_or_create_google_user(db: AsyncSession, user_info: dict) -> User:
     # 1. Look up by Google Provider ID (Existing Google user)
     user = await get_user_by_provider_id(db, "google", google_sub)
     
-    2. If not found by Google ID, look up by Email (Existing user linking Google for the first time)
+    # 2. If not found by Google ID, look up by Email (Existing user linking Google for the first time)
     if not user:
         user = await get_user_by_email(db, email)
         if user:
