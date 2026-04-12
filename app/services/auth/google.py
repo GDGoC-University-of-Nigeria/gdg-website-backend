@@ -25,14 +25,14 @@ async def find_or_create_google_user(db: AsyncSession, user_info: dict) -> User:
     user = await get_user_by_provider_id(db, "google", google_sub)
     
     # 2. If not found by Google ID, look up by Email (Existing user linking Google for the first time)
-    # if not user:
-    #     user = await get_user_by_email(db, email)
-    #     if user:
-    #         logger.info("Google login: linking existing user %s by email %s", user.id, email)
-    #         user.provider = "google"
-    #         user.provider_user_id = google_sub
-    #         db.add(user) # ensure session tracking for commit
-    #         # Continue to profile check/backfill
+    if not user:
+        user = await get_user_by_email(db, email)
+        if user:
+            logger.info("Google login: linking existing user %s by email %s", user.id, email)
+            user.provider = "google"
+            user.provider_user_id = google_sub
+            db.add(user) # ensure session tracking for commit
+            # Continue to profile check/backfill
     
     if user:
         logger.info("Google login: found/linked user %s", user.id)
