@@ -100,16 +100,16 @@ async def google_callback(
         logger.error("State token has invalid signature — possible CSRF attack")
         return RedirectResponse(url=f"{settings.FRONTEND_URL}/auth?error=invalid_state")
 
-    # ── 1b. Verify User-Agent binding (context check) ─────────────────────
-    if payload.get("ua") != _ua_hash(request):
-        logger.error("State UA mismatch — possible cross-device replay")
-        return RedirectResponse(url=f"{settings.FRONTEND_URL}/auth?error=invalid_state")
+    # ── 1b. Verify User-Agent binding (context check) 
+    # if payload.get("ua") != _ua_hash(request):
+    #     logger.error("State UA mismatch — possible cross-device replay")
+    #     return RedirectResponse(url=f"{settings.FRONTEND_URL}/auth?error=invalid_state")
 
     if not code:
         logger.error("No authorization code in callback")
         return RedirectResponse(url=f"{settings.FRONTEND_URL}/auth?error=no_code")
 
-    # ── 2. Exchange the code for tokens ───────────────────────────────────
+    # ── 2. Exchange the code for tokens 
     async with httpx.AsyncClient() as client:
         token_resp = await client.post(
             GOOGLE_TOKEN_URL,
@@ -128,7 +128,7 @@ async def google_callback(
 
     access_token_google = token_resp.json().get("access_token")
 
-    # ── 3. Fetch user info from Google ────────────────────────────────────
+    # ── 3. Fetch user info from Google 
     async with httpx.AsyncClient() as client:
         userinfo_resp = await client.get(
             GOOGLE_USERINFO_URL,
@@ -142,13 +142,13 @@ async def google_callback(
     user_info = userinfo_resp.json()
     logger.info("Google user: %s", user_info.get("email"))
 
-    # ── 4. Find or create the local user ──────────────────────────────────
+    # ── 4. Find or create the local user 
     user = await find_or_create_google_user(db, user_info)
 
     our_access_token = create_access_token(subject=str(user.id))
     our_refresh_token = create_refresh_token(subject=str(user.id))
 
-    # ── 5. Build the response ─────────────────────────────────────────────
+    # ── 5. Build the response 
     profile_complete = str(user.profile.is_complete).lower()
     redirect_url = (
         f"{settings.FRONTEND_URL}/auth/callback"
