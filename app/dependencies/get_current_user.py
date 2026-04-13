@@ -99,9 +99,18 @@ async def get_current_user(
     user = result.scalar_one_or_none()
 
     if user is None:
+        # Check if the user exists but is inactive
+        check_stmt = select(User).where(User.id == user_id)
+        check_res = await db.execute(check_stmt)
+        exists = check_res.scalar_one_or_none()
+        
+        if exists:
+            import logging
+            logging.getLogger("app.auth").warning(f"Auth failed: User {user_id} exists but is_active=False")
+            
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="User not found",
+            detail="User not found or inactive",
         )
 
     return user

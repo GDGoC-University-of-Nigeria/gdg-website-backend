@@ -22,7 +22,6 @@ class Settings(BaseSettings):
     SESSION_SECRET_KEY: str = "change-me-in-production"
     ADMIN_EMAIL: str = "[EMAIL_ADDRESS]"
 
-    ADMIN_PASSWORD: str = "Admin123tyu"
     # default uses asyncpg driver; override in .env in production
     EMAIL_HOST: str = "smtp.example.com"
     EMAIL_PORT: int = 587
