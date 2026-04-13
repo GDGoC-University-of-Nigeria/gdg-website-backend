@@ -143,7 +143,11 @@ async def google_callback(
     logger.info("Google user: %s", user_info.get("email"))
 
     # ── 4. Find or create the local user 
-    user = await find_or_create_google_user(db, user_info)
+    try:
+        user = await find_or_create_google_user(db, user_info)
+    except Exception as e:
+        logger.error("find_or_create_google_user failed: %s", str(e), exc_info=True)
+        return RedirectResponse(url=f"{settings.FRONTEND_URL}/auth?error=auth_failed")
 
     our_access_token = create_access_token(subject=str(user.id))
     our_refresh_token = create_refresh_token(subject=str(user.id))
