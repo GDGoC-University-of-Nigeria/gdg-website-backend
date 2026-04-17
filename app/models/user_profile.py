@@ -22,4 +22,4 @@ class UserProfile(Base):
 
     @property
     def is_complete(self):
-        return all([self.full_name, self.phone])  # define what "complete" means
+        return bool(self.full_name)  # profile is complete once they have a name

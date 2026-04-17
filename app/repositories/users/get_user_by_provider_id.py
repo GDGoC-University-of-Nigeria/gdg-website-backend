@@ -13,6 +13,7 @@ async def get_user_by_provider_id(
     stmt = select(User).options(selectinload(User.profile)).where(
         User.provider == provider,
         User.provider_user_id == provider_user_id,
+        User.is_active.is_(True),
     )
     result = await db.execute(stmt)
     return result.scalars().first()

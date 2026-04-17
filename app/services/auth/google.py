@@ -31,7 +31,6 @@ async def find_or_create_google_user(db: AsyncSession, user_info: dict) -> User:
             logger.info("Google login: linking existing user %s by email %s", user.id, email)
             user.provider = "google"
             user.provider_user_id = google_sub
-            user.is_active = True  # Reactivate if they were inactive
             db.add(user) # ensure session tracking for commit
             # Continue to profile check/backfill
     
