@@ -1,4 +1,5 @@
 # core/settings.py
+from typing import Literal
 from pydantic_settings import BaseSettings
 
 
@@ -36,8 +37,10 @@ class Settings(BaseSettings):
     CORS_ORIGINS: str = (
         "http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173,https://gdg-website-topaz-rho.vercel.app"
     )
-    # Set to false in local .env for cookies over HTTP
+    # Set to False in local .env for cookies over HTTP
     COOKIE_SECURE: bool = True
+    # Set to 'lax' in local .env (HTTP). Must be 'none' in production (HTTPS cross-site).
+    COOKIE_SAMESITE: Literal["lax", "strict", "none"] = "none"
     DEBUG: bool = False
     DATABASE_URL: str = "ppostgresql+asyncpg://postgres:maryjesu99@localhost:5432/gdg_db"
 
@@ -53,10 +56,7 @@ class Settings(BaseSettings):
 
     @property
     def cookie_samesite(self) -> str:
-        """
-        SameSite=None requires Secure=True (HTTPS); browsers silently drop the
-        cookie otherwise. Use 'lax' for local HTTP dev and 'none' for production.
-        """
-        return "none" if self.COOKIE_SECURE else "lax"
+        """Returns COOKIE_SAMESITE from env. Always lowercased for browser compatibility."""
+        return self.COOKIE_SAMESITE.lower()
 
 settings = Settings()
