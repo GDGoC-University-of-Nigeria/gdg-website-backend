@@ -1,0 +1,73 @@
+"""
+Updated get_blogpost_by_id — returns post with engagement counts via scalar subqueries.
+Avoids N+1 by computing counts at the SQL level in a single query.
+"""
+
+from uuid import UUID
+from sqlalchemy import func, select
+from sqlalchemy.orm import selectinload
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.models.user import User
+
+
+from app.models.blog_post_like import BlogPostLike
+from app.models.blogpost import BlogPost
+from app.models.comment import Comment
+
+
+async def get_blogpost_by_id(
+    db: AsyncSession,
+    post_id: UUID,
+    current_user_id: UUID | None = None,
+) -> BlogPost | None:
+    likes_sq = (
+        select(func.count())
+        .where(BlogPostLike.blogpost_id == BlogPost.id)
+        .scalar_subquery()
+    )
+    comments_sq = (
+        select(func.count())
+        .where(Comment.blogpost_id == BlogPost.id)
+        .scalar_subquery()
+    )
+    is_liked_sq = (
+        select(func.count())
+        .where(
+            BlogPostLike.blogpost_id == BlogPost.id,
+            BlogPostLike.user_id == current_user_id,
+        )
+        .scalar_subquery()
+        if current_user_id
+        else None
+    )
+
+    if is_liked_sq is not None:
+        stmt = select(
+            BlogPost,
+            likes_sq.label("likes_count"),
+            comments_sq.label("comments_count"),
+            is_liked_sq.label("is_liked"),
+        ).where(BlogPost.id == post_id)
+    else:
+        stmt = select(
+            BlogPost,
+            likes_sq.label("likes_count"),
+            comments_sq.label("comments_count"),
+        ).where(BlogPost.id == post_id)
+
+    stmt = stmt.options(selectinload(BlogPost.author).selectinload(User.profile))
+
+    result = await db.execute(stmt)
+    row = result.first()
+    if not row:
+        return None
+
+    post = row[0]
+    # Attach counts as attributes to the object so they can be used by schemas
+    post.likes_count = row[1]
+    post.comments_count = row[2]
+    post.is_liked_by_current_user = bool(row[3]) if is_liked_sq is not None else False
+
+    return post
+

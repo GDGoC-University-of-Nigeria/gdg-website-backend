@@ -6,6 +6,7 @@ at GDGoC UNN events.
 """
 
 from sqlalchemy import Column, String, ForeignKey, DateTime, Text
+from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 from app.db.base import Base
 from sqlalchemy.sql import func
@@ -61,5 +62,5 @@ class Speakers(Base):
     # Metadata
     added_at = Column(DateTime, server_default=func.now())  # Creation timestamp
 
-    # Relationships (to be implemented)
-    # event = relationship("Event", back_populates="speakers")
+    # Relationships
+    event = relationship("Event", back_populates="speakers")

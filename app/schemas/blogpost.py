@@ -1,55 +1,81 @@
 """
 BlogPost schemas for the GDGoC UNN API.
 
-This module defines Pydantic schemas for blog post operations including
-creating and reading blog posts written by community members.
+Supports a moderated publishing workflow:
+  - Community members submit posts (status = pending)
+  - Admins approve or reject submissions
+  - Only approved posts are publicly visible
 """
 
-from pydantic import BaseModel, ConfigDict
+from datetime import datetime
+from enum import Enum
 from uuid import UUID
 
+from pydantic import BaseModel, ConfigDict
+
+
+class BlogPostStatus(str, Enum):
+    pending = "pending"
+    approved = "approved"
+    rejected = "rejected"
+
+
+# ---------------------------------------------------------------------------
+# Request schemas
+# ---------------------------------------------------------------------------
 
 class BlogPostCreate(BaseModel):
-    """
-    Schema for creating a new blog post.
-    
-    Community members can create blog posts about technical topics, tutorials,
-    or project experiences. Posts require admin verification before being publicly visible.
-    
-    Attributes:
-        title (str): Blog post title/headline
-        image_url (str, optional): URL to featured/cover image
-        content (str): Full blog post content (supports markdown)
-        niche (str, optional): Topic category (e.g., "Web Development", "AI/ML")
-    
-    Notes:
-        - Posts are created with is_verified=False by default
-        - Content is expected to be in markdown format
-        - author_id is set automatically from the authenticated user
-    """
+    """Payload for submitting a new blog post (community members)."""
     title: str
-    image_url: str | None = None
     content: str
+    image_url: str | None = None
     niche: str | None = None
 
 
-class BlogPostRead(BlogPostCreate):
-    """
-    Schema for reading blog post data from the API.
-    
-    Extends BlogPostCreate with database-generated fields and verification status.
-    
-    Attributes:
-        id (UUID): Unique blog post identifier
-        author_id (UUID): ID of the user who wrote the post
-        is_verified (bool): Whether the post has been approved by admins
-    
-    Notes:
-        - Only verified posts should be shown to non-admin users
-        - Authors can see their own unverified posts
-    """
+class BlogPostUpdate(BaseModel):
+    """Partial update — only allowed while status is pending."""
+    title: str | None = None
+    content: str | None = None
+    image_url: str | None = None
+    niche: str | None = None
+
+
+class BlogPostReject(BaseModel):
+    """Admin rejection payload."""
+    rejection_reason: str | None = None
+
+
+# ---------------------------------------------------------------------------
+# Response schemas
+# ---------------------------------------------------------------------------
+
+class BlogPostRead(BaseModel):
+    """Public-facing blog post response (approved posts only)."""
     id: UUID
     author_id: UUID
-    is_verified: bool
+    title: str
+    content: str
+    image_url: str | None
+    niche: str | None
+    content_format: str | None
+    status: BlogPostStatus
+    posted_at: datetime | None
+    updated_at: datetime | None
+    approved_at: datetime | None
+    # Engagement counts (populated via scalar subqueries)
+    likes_count: int = 0
+    comments_count: int = 0
+    is_liked_by_current_user: bool = False
 
     model_config = ConfigDict(from_attributes=True)
+
+
+from app.schemas.user import UserBasic as AuthorInfo
+
+
+
+class BlogPostAdminRead(BlogPostRead):
+    """Full blog post response for admins — includes moderation details."""
+    approved_by: UUID | None
+    rejection_reason: str | None
+    author: AuthorInfo | None = None

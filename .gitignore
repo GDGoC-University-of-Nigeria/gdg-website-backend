@@ -1,0 +1,63 @@
+.env
+.env.*
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+env/
+.venv/
+ENV/
+
+
+# Build / packaging
+build/
+dist/
+*.egg-info/
+pip-wheel-metadata/
+eggs/
+
+# Tooling / caches
+.mypy_cache/
+.pytest_cache/
+.tox/
+.cache/
+
+# Coverage
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Databases
+*.sqlite3
+*.db
+
+# Logs
+*.log
+logs/
+gunicorn.log
+
+# IDE / editor
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Compiled extensions
+*.so
+*.dylib__pycache__/
+*.pyc
+
+
+
+delete_admin.py 
