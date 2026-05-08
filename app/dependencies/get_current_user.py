@@ -1,32 +1,3 @@
-# from fastapi import Depends, HTTPException, status
-# from sqlalchemy.ext.asyncio import AsyncSession
-
-# from app.core.security import decode_access_token
-# from app.db.session import get_db
-# from app.repositories.users import get_user_by_id
-
-
-# async def get_current_user(
-#     token: str = Depends(decode_access_token),
-#     db: AsyncSession = Depends(get_db),
-# ):
-#     user_id = token.get("sub")
-
-#     if not user_id:
-#         raise HTTPException(
-#             status_code=status.HTTP_401_UNAUTHORIZED,
-#             detail="Invalid authentication token",
-#         )
-
-#     user = await get_user_by_id(db, user_id)
-
-#     if not user:
-#         raise HTTPException(
-#             status_code=status.HTTP_401_UNAUTHORIZED,
-#             detail="User not found",
-#         )
-
-#     return user
 
 from typing import Optional
 from fastapi import Depends, HTTPException, Request, status

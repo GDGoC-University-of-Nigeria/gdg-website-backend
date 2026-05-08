@@ -156,20 +156,23 @@ async def google_callback(
     profile_complete = str(user.profile.is_complete).lower()
     redirect_url = (
         f"{settings.FRONTEND_URL}/auth/callback"
-        f"?profile_complete={profile_complete}"
+        f"?access_token={our_access_token}"
+        # f"&refresh_token={our_refresh_token}"
+        f"&profile_complete={profile_complete}"
     )
+    
     response = RedirectResponse(url=redirect_url)
 
     # Set access token cookie (global path — sent on every authenticated request)
-    response.set_cookie(
-        key="access_token",
-        value=our_access_token,
-        httponly=True,
-        secure=settings.COOKIE_SECURE,
-        samesite=settings.cookie_samesite,
-        max_age=60 * settings.ACCESS_TOKEN_EXPIRE_MINUTES,
-        path="/",
-    )
+    # response.set_cookie(
+    #     key="access_token",
+    #     value=our_access_token,
+    #     httponly=True,
+    #     secure=settings.COOKIE_SECURE,
+    #     samesite=settings.cookie_samesite,
+    #     max_age=60 * settings.ACCESS_TOKEN_EXPIRE_MINUTES,
+    #     path="/",
+    # )
 
     # Set refresh token cookie (restricted to /auth/refresh — not sent on every request)
     response.set_cookie(
