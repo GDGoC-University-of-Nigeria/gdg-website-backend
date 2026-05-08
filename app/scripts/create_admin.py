@@ -8,7 +8,7 @@ from app.models.user_profile import UserProfile
 import os
 
 
-ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "ntmark2004@gmail.com@gmail.com")
+ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "ntmark2004@gmail.com")
 ADMIN_FULL_NAME = os.getenv("ADMIN_NAME", "Mark Ndubuisi")
 
 async def create_admin():
