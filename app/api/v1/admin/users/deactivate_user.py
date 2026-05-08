@@ -9,7 +9,7 @@ from app.repositories.users.soft_delete_user import soft_delete_user
 from app.repositories.users.get_user_by_id import get_user_by_id
 from app.models.user import User
 
-from .list_users import router
+from .router import router
 
 
 @router.delete(

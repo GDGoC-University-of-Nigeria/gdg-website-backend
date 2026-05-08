@@ -5,7 +5,7 @@ from app.services.auth.tokens import create_access_token
 from app.core.config import settings
 from jose import jwt, JWTError
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+router = APIRouter(tags=["auth"])
 
 @router.post("/refresh")
 def refresh_token(request: Request, response: Response):

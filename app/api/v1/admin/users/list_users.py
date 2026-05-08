@@ -5,7 +5,7 @@ from app.repositories.users.get_all_users import get_all_users
 from app.schemas.user import UserResponse
 from app.db.session import get_db
 
-router = APIRouter(prefix="/admin/users", tags=["admin users list"])
+from .router import router
 
 @router.get("/", response_model=list[UserResponse])
 async def list_users(

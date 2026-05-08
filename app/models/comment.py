@@ -1,7 +1,7 @@
 """Comment model for blog posts."""
 
 import uuid
-from sqlalchemy import Column, DateTime, ForeignKey, Index, Text
+from sqlalchemy import Column, DateTime, ForeignKey, Index, Text, Boolean
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -26,6 +26,7 @@ class Comment(Base):
     )
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+    is_hidden = Column(Boolean, nullable=False, default=False, server_default="false")
 
     # Relationships
     user = relationship("User", back_populates="comments")

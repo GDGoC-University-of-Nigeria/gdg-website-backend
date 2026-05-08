@@ -18,6 +18,11 @@ class CommentUpdate(BaseModel):
     content: str
 
 
+class CommentHide(BaseModel):
+    """Admin payload to hide/unhide a comment."""
+    is_hidden: bool
+
+
 class CommentRead(BaseModel):
     id: UUID
     content: str
@@ -25,6 +30,7 @@ class CommentRead(BaseModel):
     blogpost_id: UUID
     created_at: datetime | None
     updated_at: datetime | None
+    is_hidden: bool
     author: CommentAuthorInfo | None = Field(default=None, validation_alias="user")
 
     model_config = ConfigDict(from_attributes=True)

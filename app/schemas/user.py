@@ -44,18 +44,27 @@ class UpdateUserRequest(BaseModel):
     bio: str | None = None
 
 
+class UserRoleUpdate(BaseModel):
+    """Admin payload to promote or demote a user."""
+    is_admin: bool
 
 
-# class UserRead(BaseModel):
-   
-  
-#     id: UUID
-#     email: EmailStr
-#     full_name: str | None
-#     # role: str | None
-#     # github: str | None
-#     # avatar_url: str | None
-#     skills: List[str]
+class MemberListResponse(BaseModel):
+    """Paginated community member list with server-side total count."""
+    total: int
+    items: List[UserResponse]
 
-#     class Config:
-#         from_attributes = True
+
+class EventRegistrationRead(BaseModel):
+    """Minimal registration record returned to admins."""
+    id: UUID
+    event_id: UUID
+    user_id: UUID
+    registered_at: datetime
+    user: UserBasic | None = None
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+
+
