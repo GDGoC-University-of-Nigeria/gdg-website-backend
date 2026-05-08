@@ -26,6 +26,7 @@ class EventResponse(EventBase):
     attendees: Optional[int] = None
     speakers: List[SpeakerResponse] = []
     created_at: datetime
+    is_published: bool
 
     model_config = ConfigDict(from_attributes=True)
 

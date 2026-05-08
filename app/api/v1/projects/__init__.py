@@ -16,6 +16,7 @@ from . import (
     remove_contributor,
     get_contributors,
     apply,
+    withdraw_application,
     get_applications,
     approve_application,
     reject_application,

@@ -15,7 +15,10 @@ from . import (
     like_blogpost,      # /{post_id}/like
     post_comment,       # /{post_id}/comments POST
     get_comments,       # /{post_id}/comments GET
+    niches,             # /niches (static before /{post_id})
     get_blogpost,       # /{post_id} — catch-all last
+    update_blogpost,
+    delete_blogpost,
 )
 
 __all__ = ["router"]

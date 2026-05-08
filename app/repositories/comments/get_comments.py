@@ -16,8 +16,10 @@ async def get_comments(
     result = await db.execute(
         select(Comment)
         .options(selectinload(Comment.user).selectinload(User.profile))
-
-        .where(Comment.blogpost_id == blogpost_id)
+        .where(
+            Comment.blogpost_id == blogpost_id,
+            Comment.is_hidden.is_(False),
+        )
         .order_by(Comment.created_at.desc())
         .offset(skip)
         .limit(limit)

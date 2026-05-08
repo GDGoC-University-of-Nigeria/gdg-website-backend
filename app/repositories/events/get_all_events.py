@@ -15,6 +15,7 @@ async def get_all_events(
     query = (
         select(Event)
         .options(selectinload(Event.speakers))
+        .where(Event.is_published.is_(True))
         .order_by(Event.date.asc())
         .limit(limit)
     )

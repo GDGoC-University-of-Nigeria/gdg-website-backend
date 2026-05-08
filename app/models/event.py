@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Time, ForeignKey, Date, DateTime
+from sqlalchemy import Column, Integer, String, Time, ForeignKey, Date, DateTime, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 from app.db.base import Base
@@ -31,6 +31,7 @@ class Event(Base):
     )
 
     created_at = Column(DateTime, server_default=func.now())
+    is_published = Column(Boolean, nullable=False, default=False, server_default="false")
 
     # Relationships
     speakers = relationship("Speakers", back_populates="event", cascade="all, delete-orphan")

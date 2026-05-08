@@ -2,7 +2,7 @@ from fastapi import APIRouter, Response
 
 from app.core.config import settings
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+router = APIRouter(tags=["auth"])
 
 
 @router.post("/logout")
