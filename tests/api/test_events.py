@@ -21,7 +21,7 @@ async def test_create_event_as_admin(
     """Test that an admin can create an event."""
     # Act
     response = await test_client.post(
-        "/events/",
+        "/api/v1/events/",
         json=sample_event_data,
         headers=admin_headers,
     )
@@ -45,7 +45,7 @@ async def test_create_event_unauthorized(
     """Test that creating an event without authentication fails."""
     # Act
     response = await test_client.post(
-        "/events/",
+        "/api/v1/events/",
         json=sample_event_data,
     )
     
@@ -63,7 +63,7 @@ async def test_create_event_as_non_admin(
     """Test that a non-admin user cannot create an event."""
     # Act
     response = await test_client.post(
-        "/events/",
+        "/api/v1/events/",
         json=sample_event_data,
         headers=regular_user_headers,
     )
@@ -87,7 +87,7 @@ async def test_create_event_missing_required_fields(
     
     # Act
     response = await test_client.post(
-        "/events/",
+        "/api/v1/events/",
         json=invalid_data,
         headers=admin_headers,
     )
@@ -106,13 +106,13 @@ async def test_get_all_events(
     """Test retrieving all events."""
     # Arrange - Create an event first
     await test_client.post(
-        "/events/",
+        "/api/v1/events/",
         json=sample_event_data,
         headers=admin_headers,
     )
     
     # Act
-    response = await test_client.get("/events/")
+    response = await test_client.get("/api/v1/events/")
     
     # Assert
     assert response.status_code == 200
@@ -133,14 +133,14 @@ async def test_get_event_by_id(
     """Test retrieving a specific event by ID."""
     # Arrange - Create an event first
     create_response = await test_client.post(
-        "/events/",
+        "/api/v1/events/",
         json=sample_event_data,
         headers=admin_headers,
     )
     event_id = create_response.json()["id"]
     
     # Act
-    response = await test_client.get(f"/events/{event_id}")
+    response = await test_client.get(f"/api/v1/events/{event_id}")
     
     # Assert
     assert response.status_code == 200
@@ -158,7 +158,7 @@ async def test_get_event_by_id_not_found(test_client: AsyncClient):
     non_existent_id = "00000000-0000-0000-0000-000000000000"
     
     # Act
-    response = await test_client.get(f"/events/{non_existent_id}")
+    response = await test_client.get(f"/api/v1/events/{non_existent_id}")
     
     # Assert
     assert response.status_code == 404
@@ -175,7 +175,7 @@ async def test_update_event_as_admin(
     """Test that an admin can update an event."""
     # Arrange - Create an event first
     create_response = await test_client.post(
-        "/events/",
+        "/api/v1/events/",
         json=sample_event_data,
         headers=admin_headers,
     )
@@ -183,7 +183,7 @@ async def test_update_event_as_admin(
     
     # Act
     response = await test_client.put(
-        f"/events/{event_id}",
+        f"/api/v1/events/{event_id}",
         json=sample_event_update_data,
         headers=admin_headers,
     )
@@ -206,7 +206,7 @@ async def test_update_event_with_null_date(
     """Test that updating an event with null date doesn't change the date."""
     # Arrange - Create an event first
     create_response = await test_client.post(
-        "/events/",
+        "/api/v1/events/",
         json=sample_event_data,
         headers=admin_headers,
     )
@@ -219,7 +219,7 @@ async def test_update_event_with_null_date(
         "date": None,
     }
     response = await test_client.put(
-        f"/events/{event_id}",
+        f"/api/v1/events/{event_id}",
         json=update_data,
         headers=admin_headers,
     )
@@ -241,7 +241,7 @@ async def test_update_event_unauthorized(
     """Test that updating an event without authentication fails."""
     # Arrange - Create an event first
     create_response = await test_client.post(
-        "/events/",
+        "/api/v1/events/",
         json=sample_event_data,
         headers=admin_headers,
     )
@@ -249,7 +249,7 @@ async def test_update_event_unauthorized(
     
     # Act
     response = await test_client.put(
-        f"/events/{event_id}",
+        f"/api/v1/events/{event_id}",
         json={"title": "Updated Title"},
     )
     
@@ -267,7 +267,7 @@ async def test_delete_event_as_admin(
     """Test that an admin can delete an event."""
     # Arrange - Create an event first
     create_response = await test_client.post(
-        "/events/",
+        "/api/v1/events/",
         json=sample_event_data,
         headers=admin_headers,
     )
@@ -275,7 +275,7 @@ async def test_delete_event_as_admin(
     
     # Act
     response = await test_client.delete(
-        f"/events/{event_id}",
+        f"/api/v1/events/{event_id}",
         headers=admin_headers,
     )
     
@@ -283,7 +283,7 @@ async def test_delete_event_as_admin(
     assert response.status_code == 204
     
     # Verify event is deleted
-    get_response = await test_client.get(f"/events/{event_id}")
+    get_response = await test_client.get(f"/api/v1/events/{event_id}")
     assert get_response.status_code == 404
 
 
@@ -299,7 +299,7 @@ async def test_delete_event_not_found(
     
     # Act
     response = await test_client.delete(
-        f"/events/{non_existent_id}",
+        f"/api/v1/events/{non_existent_id}",
         headers=admin_headers,
     )
     
@@ -317,14 +317,14 @@ async def test_delete_event_unauthorized(
     """Test that deleting an event without authentication fails."""
     # Arrange - Create an event first
     create_response = await test_client.post(
-        "/events/",
+        "/api/v1/events/",
         json=sample_event_data,
         headers=admin_headers,
     )
     event_id = create_response.json()["id"]
     
     # Act
-    response = await test_client.delete(f"/events/{event_id}")
+    response = await test_client.delete(f"/api/v1/events/{event_id}")
     
     # Assert
     assert response.status_code == 401
