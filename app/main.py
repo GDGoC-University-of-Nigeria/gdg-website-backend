@@ -63,9 +63,11 @@ app.include_router(admin_stats_router, prefix="/api/v1", tags=["admin stats"])
 app.include_router(comments_router, prefix="/api/v1/comments", tags=["comments"])
 app.include_router(community_router, prefix="/api/v1/community", tags=["community"])
 app.include_router(team_router, prefix="/api/v1", tags=["team"])
+from app.api.v1.hackathon.router import router as hackathon_router
+
 app.include_router(public_forms_router, prefix="/api/v1/public/forms", tags=["public forms"])
 app.include_router(media_router, prefix="/api/v1/media", tags=["media"])
-
+app.include_router(hackathon_router, prefix="/api/v1/hackathon", tags=["hackathon"])
 @app.get("/")
 async def root():
     return {"message": "Welcome to the GDGoC, UNN Community API!"}
