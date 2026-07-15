@@ -1,5 +1,6 @@
+# pyrefly: ignore [missing-import]
 from fastapi import APIRouter
 
 
-router = APIRouter(prefix="/events", tags=["events"])
+router = APIRouter(tags=["events"])
 

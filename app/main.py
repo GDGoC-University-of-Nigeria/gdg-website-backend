@@ -1,5 +1,8 @@
+# pyrefly: ignore [missing-import]
 from fastapi import FastAPI
+# pyrefly: ignore [missing-import]
 from fastapi.middleware.cors import CORSMiddleware
+# pyrefly: ignore [missing-import]
 from starlette.middleware.sessions import SessionMiddleware
 from app.core.config import settings
 import app.db.base_class  # noqa: F401 — registers all models with SQLAlchemy mapper
