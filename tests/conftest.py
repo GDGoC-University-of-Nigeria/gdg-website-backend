@@ -16,7 +16,8 @@ from app.main import app
 from app.db.session import get_db
 from app.db.base import Base
 from app.models.user import User
-from app.core.security import hash_password, create_access_token
+from app.core.security import hash_password
+from app.services.auth.tokens import create_access_token
 from app.core.config import settings
 
 # Initialize Faker
