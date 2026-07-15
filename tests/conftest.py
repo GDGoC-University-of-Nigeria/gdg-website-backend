@@ -16,7 +16,9 @@ from app.main import app
 from app.db.session import get_db
 from app.db.base import Base
 from app.models.user import User
-from app.core.security import hash_password, create_access_token
+from app.models.user_profile import UserProfile
+from app.core.security import hash_password
+from app.services.auth.tokens import create_access_token
 from app.core.config import settings
 
 # Initialize Faker
@@ -47,9 +49,7 @@ async def test_db() -> AsyncGenerator[AsyncSession, None]:
         echo=False,
     )
     
-    # Create tables
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    # Removed Base.metadata.create_all to prevent interfering with the real database
     
     # Create session
     async_session = async_sessionmaker(
@@ -61,9 +61,7 @@ async def test_db() -> AsyncGenerator[AsyncSession, None]:
             yield session
             await session.rollback()
     
-    # Drop tables after test
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
+    # Removed Base.metadata.drop_all to prevent dropping all tables in the real database
     
     await engine.dispose()
 
@@ -95,15 +93,21 @@ async def admin_user(test_db: AsyncSession) -> User:
     """Create an admin user for testing."""
     user = User(
         id=uuid.uuid4(),
-        full_name=fake.name(),
         email=fake.email(),
-        phone=fake.phone_number()[:15],
-        hashed_password=hash_password("testpassword123"),
         is_admin=True,
         provider="local",
         provider_user_id=str(uuid.uuid4()),
     )
     test_db.add(user)
+    await test_db.flush()
+    
+    profile = UserProfile(
+        id=uuid.uuid4(),
+        user_id=user.id,
+        full_name=fake.name(),
+        phone=fake.phone_number()[:15],
+    )
+    test_db.add(profile)
     await test_db.commit()
     await test_db.refresh(user)
     return user
@@ -114,15 +118,21 @@ async def regular_user(test_db: AsyncSession) -> User:
     """Create a regular (non-admin) user for testing."""
     user = User(
         id=uuid.uuid4(),
-        full_name=fake.name(),
         email=fake.email(),
-        phone=fake.phone_number()[:15],
-        hashed_password=hash_password("testpassword123"),
         is_admin=False,
         provider="local",
         provider_user_id=str(uuid.uuid4()),
     )
     test_db.add(user)
+    await test_db.flush()
+    
+    profile = UserProfile(
+        id=uuid.uuid4(),
+        user_id=user.id,
+        full_name=fake.name(),
+        phone=fake.phone_number()[:15],
+    )
+    test_db.add(profile)
     await test_db.commit()
     await test_db.refresh(user)
     return user
