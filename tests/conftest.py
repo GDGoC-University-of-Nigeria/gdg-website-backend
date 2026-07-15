@@ -108,7 +108,7 @@ async def admin_user(test_db: AsyncSession) -> User:
         phone=fake.phone_number()[:15],
     )
     test_db.add(profile)
-    await test_db.commit()
+    await test_db.flush()
     await test_db.refresh(user)
     return user
 
@@ -133,7 +133,7 @@ async def regular_user(test_db: AsyncSession) -> User:
         phone=fake.phone_number()[:15],
     )
     test_db.add(profile)
-    await test_db.commit()
+    await test_db.flush()
     await test_db.refresh(user)
     return user
 
